@@ -1,5 +1,5 @@
-# Lottery-Dapp-
-Solidity Lottery Dapp 
+# Lottery-Dapp
+Solidity Lottery Dapp
 
 개발환경
 node.js  > 8.15
