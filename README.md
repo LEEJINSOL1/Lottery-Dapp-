@@ -18,6 +18,8 @@ vscode - solidity extension
 
 metamask
 
+![규칙](https://github.com/LEEJINSOL1/Lottery-Dapp-/assets/49275914/d58447d8-2f0b-4f81-9b13-2743030a49bf)
+
 
 
 
