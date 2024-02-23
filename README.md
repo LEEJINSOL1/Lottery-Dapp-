@@ -6,16 +6,18 @@
 
 개발환경
 
-node.js  > 8.15
+node.js  v20.11.1
 
 vscode
 
-truffle 
+truffle v5.11.5(core : 5.11.5)
 
-ganache-cli
+ganache-cli v.7.9.1
 
 vscode - solidity extension
 
 metamask
+
+
 
 
