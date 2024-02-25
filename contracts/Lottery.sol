@@ -93,7 +93,7 @@ contract Lottery{
       * @dev 배팅글자와 정답을 확인한다.
         @param challenges 배팅 글자
         @param answer 블락해쉬
-        @return 정답결과
+        @return 
        */
       function isMatch(byte challenges, bytes32 answer) public pure returns (BettingResult){
          // challenges 0xab
