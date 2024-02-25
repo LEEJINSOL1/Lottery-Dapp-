@@ -19,6 +19,9 @@ contract Lottery{
       uint256 constant internal BET_BLOCK_INTERVAL = 3;
       uint256 constant internal BLOCK_LIMIT  = 256;
 
+      enum BlockStatus { Checkable, NotRevealed, BlockLimitPassed }
+      enum BettingResult {Fail, Win, Draw}
+
       event BET(uint256 index, address bettor, uint256 amount , byte challenges, uint256 answerBlockNumber);
       
 
@@ -55,7 +58,93 @@ contract Lottery{
          
 
       // Distribute 검증
-        //결과값을 검증하는 큐
+      function distribute() public {
+         //큐에 저장된 배팅정보가  3(head),4,5,6,7,8,9,10(tail)
+         uint256 cur; 
+         BetInfo memory b;
+         BlockStatus currentBlockStatus; 
+         for (cur=_head; cur<_tail; cur++){
+            b = _bets[cur];
+            currentBlockStatus = getBlockStatus(b.answerBlockNumber);
+
+            // checkable : block.number > Answerblocknumber && block.number < block_limit + answerblocknumber / 1
+            if(currentBlockStatus == BlockStatus.Checkable){
+               //if win => bettor gets pot
+
+               //if fail => bettor's money goes pot 
+
+               //if draw  refund bettor's money 
+            }
+            // not revealed  : 마이닝이 안된상황 : block.number <= answerblocknumber 2
+            if(currentBlockStatus == BlockStatus.NotRevealed){
+               break;
+            }
+            // block limit passed : block.number >= answerblocknumber + blocklimit 3
+            if(currentBlockStatus == BlockStatus.BlockLimitPassed){
+               //refund
+               //emit refund 
+            }         
+            //check the answer
+            popBet(cur);
+         } 
+      }
+
+      /**
+      * @dev 배팅글자와 정답을 확인한다.
+        @param challenges 배팅 글자
+        @param answer 블락해쉬
+        @return 정답결과
+       */
+      function isMatch(byte challenges, bytes32 answer) public pure returns (BettingResult){
+         // challenges 0xab
+         // answer 0xab....ff 32 bytes
+
+         byte c1 = challenges;
+         byte c2 = challenges;
+
+         byte a1 = answer[0];
+         byte a2 = answer[0];
+
+         // get first number
+         c1 = c1 >> 4; //0xab -> 0x0a
+         c1 = c1 << 4; // 0xab -> 0xa0
+
+         a1 = a1 >> 4;
+         a1 = a1 << 4;
+
+         ///get second number
+         c2 = c2 << 4; //0xab -> 0xb0
+         c2 = c2 >> 4; //0xb0 -> 0x0b
+
+         a2 = a2 << 4;
+         a2 = a2 >> 4; 
+
+         if(a1 == c1 && a2 == c2){
+            return BettingResult.Win;
+         }
+         if(a1 == c1 || a2 == c2 ){
+            return BettingResult.Draw;
+         }
+         return BettingResult.Fail;
+
+      }
+
+      function getBlockStatus(uint256 answerBlockNumber) internal view returns (BlockStatus ){
+         if(block.number > answerBlockNumber && block.number < BLOCK_LIMIT + answerBlockNumber){
+            return BlockStatus.Checkable;
+         }
+         if(block.number <= answerBlockNumber){
+            return BlockStatus.NotRevealed;
+         }
+         if(block.number >= answerBlockNumber + BLOCK_LIMIT){
+            return BlockStatus.BlockLimitPassed;
+         }
+         return BlockStatus.BlockLimitPassed;
+
+      }
+
+      //결과값을 검증하는 큐
+
         //값이 틀리면 팟머니에 넣고 맞으면 돌려주는  
 
       function getBetInfo(uint256 index) public view returns (uint256 answerBlockNumber, address bettor , byte challenges){
