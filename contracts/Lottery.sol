@@ -3,14 +3,14 @@
 pragma solidity >=0.4.22 <0.7.0;
 
 contract Lottery{
-      struct BetInfo{
+      struct BetInfo{ // 구조체
          uint256 answerBlockNumber; //정답블록넘버
          address payable bettor; //배팅한사람 주소
          byte challenges; // ex) 0xab 
       }
       uint256 private _tail;
       uint256 private _head;
-      mapping (uint256 => BetInfo) private _bets;
+      mapping (uint256 => BetInfo) private _bets; //_bets[uint256 타입] = BetInfo타입
 
       address payable public owner; //public 자동 getter를 생성해줌 / 
       bool private mode = false; //false: use answer for test , true : use real block hash
@@ -18,11 +18,11 @@ contract Lottery{
       bytes32 public answerForTest;
       uint256 constant internal BET_AMOUNT = 5 *10**15;
       uint256 constant internal BET_BLOCK_INTERVAL = 3;
-      uint256 constant internal BLOCK_LIMIT  = 256;
+      uint256 constant internal BLOCK_LIMIT  = 256; // internal 계약내부에서만 사용된다
 
       enum BlockStatus { Checkable, NotRevealed, BlockLimitPassed }
       enum BettingResult {Fail, Win, Draw}
-
+//enum은 0~255 uint와 비슷
       event BET(uint256 index, address bettor, uint256 amount , byte challenges, uint256 answerBlockNumber);
       event WIN(uint256 index, address bettor, uint256 amount, byte challenges, byte answer, uint256 answerBlockNumber);
       event FAIL(uint256 index, address bettor, uint256 amount, byte challenges, byte answer, uint256 answerBlockNumber);
