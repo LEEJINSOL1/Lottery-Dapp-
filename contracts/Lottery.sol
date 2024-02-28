@@ -249,7 +249,7 @@ contract Lottery{
          return true;
       }
 
-      //pop
+      //pop 빼
       function popBet(uint256 index) internal returns (bool){
          delete _bets[index];
          return true;
